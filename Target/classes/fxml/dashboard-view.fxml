@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.ledger.salesmanager.controller.DashboardViewController"
+            fitToWidth="true" styleClass="transparent-scroll">
+    <VBox spacing="18">
+        <padding><Insets top="22" bottom="30" left="26" right="26"/></padding>
+
+        <Label text="Dashboard" styleClass="page-title"/>
+        <Label text="Live overview of your business." styleClass="muted-text"/>
+
+        <FlowPane fx:id="kpiRow" hgap="14" vgap="14"/>
+
+        <HBox spacing="16">
+            <VBox styleClass="card-pane" HBox.hgrow="ALWAYS" spacing="8">
+                <padding><Insets top="16" bottom="16" left="16" right="16"/></padding>
+                <Label text="Revenue &amp; Profit Trend (last 14 days)" styleClass="section-title"/>
+                <LineChart fx:id="trendChart" prefHeight="280" animated="true">
+                    <xAxis><CategoryAxis fx:id="trendXAxis" label="Date"/></xAxis>
+                    <yAxis><NumberAxis fx:id="trendYAxis" label="Amount"/></yAxis>
+                </LineChart>
+            </VBox>
+
+            <VBox styleClass="card-pane" prefWidth="320" spacing="8">
+                <padding><Insets top="16" bottom="16" left="16" right="16"/></padding>
+                <Label text="Sales Mix" styleClass="section-title"/>
+                <PieChart fx:id="mixChart" prefHeight="280" legendVisible="true"/>
+            </VBox>
+        </HBox>
+
+        <HBox spacing="16">
+            <VBox styleClass="card-pane" HBox.hgrow="ALWAYS" spacing="8">
+                <padding><Insets top="16" bottom="16" left="16" right="16"/></padding>
+                <Label text="Top Selling Products" styleClass="section-title"/>
+                <BarChart fx:id="topProductsChart" prefHeight="260" animated="true" legendVisible="false">
+                    <xAxis><CategoryAxis fx:id="topXAxis"/></xAxis>
+                    <yAxis><NumberAxis fx:id="topYAxis" label="Units Sold"/></yAxis>
+                </BarChart>
+            </VBox>
+
+            <VBox styleClass="card-pane" prefWidth="320" spacing="8">
+                <padding><Insets top="16" bottom="16" left="16" right="16"/></padding>
+                <Label text="Low Stock Watchlist" styleClass="section-title"/>
+                <ListView fx:id="lowStockList" prefHeight="260"/>
+            </VBox>
+        </HBox>
+    </VBox>
+</ScrollPane>

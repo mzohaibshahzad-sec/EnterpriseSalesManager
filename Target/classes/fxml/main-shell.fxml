@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.ledger.salesmanager.controller.MainShellController"
+            styleClass="root-pane">
+    <left>
+        <VBox styleClass="sidebar" prefWidth="230" spacing="4">
+            <padding><Insets top="20" bottom="20" left="14" right="14"/></padding>
+
+            <Label text="Enterprise Sales" styleClass="title-text"/>
+            <Label text="Management System" styleClass="muted-text"/>
+            <Region prefHeight="18"/>
+
+            <Button fx:id="navDashboard" text="Dashboard" maxWidth="Infinity" styleClass="nav-button" onAction="#showDashboard"/>
+            <Button fx:id="navProducts" text="Products" maxWidth="Infinity" styleClass="nav-button" onAction="#showProducts"/>
+            <Button fx:id="navSales" text="Sales" maxWidth="Infinity" styleClass="nav-button" onAction="#showSales"/>
+            <Button fx:id="navUsers" text="Users" maxWidth="Infinity" styleClass="nav-button" onAction="#showUsers"/>
+            <Button fx:id="navReports" text="Reports" maxWidth="Infinity" styleClass="nav-button" onAction="#showReports"/>
+            <Button fx:id="navAuditLog" text="Audit Log" maxWidth="Infinity" styleClass="nav-button" onAction="#showAuditLog"/>
+            <Button fx:id="navSettings" text="Settings" maxWidth="Infinity" styleClass="nav-button" onAction="#showSettings"/>
+            <Button fx:id="navProfile" text="Profile" maxWidth="Infinity" styleClass="nav-button" onAction="#showProfile"/>
+
+            <Region VBox.vgrow="ALWAYS"/>
+
+            <Separator/>
+            <Label fx:id="currentUserLabel" styleClass="field-label"/>
+            <Label fx:id="currentRoleLabel" styleClass="muted-text"/>
+            <Button text="Sign Out" maxWidth="Infinity" onAction="#onSignOut"/>
+        </VBox>
+    </left>
+
+    <center>
+        <StackPane fx:id="contentArea" styleClass="content-area"/>
+    </center>
+</BorderPane>

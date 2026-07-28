@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.ledger.salesmanager.controller.LoginController"
+      alignment="CENTER" spacing="16" styleClass="root-pane">
+    <padding><Insets top="40" bottom="40" left="50" right="50"/></padding>
+
+    <Label text="Enterprise Sales Manager" styleClass="title-text"/>
+    <Label text="Sign in to continue" styleClass="muted-text"/>
+
+    <VBox spacing="12" maxWidth="320" styleClass="card-pane">
+        <padding><Insets top="24" bottom="24" left="24" right="24"/></padding>
+        <Label text="Username" styleClass="field-label"/>
+        <TextField fx:id="usernameField"/>
+
+        <Label text="Password" styleClass="field-label"/>
+        <PasswordField fx:id="passwordField" onAction="#onLogin"/>
+
+        <Label fx:id="errorLabel" styleClass="error-text" wrapText="true"/>
+
+        <Button text="Sign In" styleClass="primary-button" maxWidth="Infinity" onAction="#onLogin"/>
+        <Button text="Back to Catalog" maxWidth="Infinity" onAction="#onBackToViewer"/>
+    </VBox>
+</VBox>

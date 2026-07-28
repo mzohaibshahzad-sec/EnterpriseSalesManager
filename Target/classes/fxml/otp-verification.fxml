@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.ledger.salesmanager.controller.OtpVerificationController"
+      alignment="CENTER" spacing="14" styleClass="root-pane">
+    <padding><Insets top="40" bottom="40" left="50" right="50"/></padding>
+
+    <Label text="Verify Your Identity" styleClass="title-text"/>
+    <Label fx:id="infoLabel" text="A 6-digit code was sent to your Gmail." styleClass="muted-text" wrapText="true" textAlignment="CENTER"/>
+
+    <VBox spacing="12" maxWidth="300" styleClass="card-pane">
+        <padding><Insets top="24" bottom="24" left="24" right="24"/></padding>
+        <Label text="Enter OTP Code" styleClass="field-label"/>
+        <TextField fx:id="otpField" onAction="#onVerify" style="-fx-font-size: 20px; -fx-alignment: center;"/>
+
+        <Label fx:id="errorLabel" styleClass="error-text" wrapText="true"/>
+        <Label fx:id="timerLabel" styleClass="muted-text"/>
+
+        <Button text="Verify" styleClass="primary-button" maxWidth="Infinity" onAction="#onVerify"/>
+        <Button fx:id="resendButton" text="Resend Code" maxWidth="Infinity" onAction="#onResend"/>
+        <Button text="Cancel" maxWidth="Infinity" onAction="#onCancel"/>
+    </VBox>
+</VBox>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.ledger.salesmanager.controller.AuditLogViewController" spacing="14">
+    <padding><Insets top="22" bottom="22" left="26" right="26"/></padding>
+
+    <VBox>
+        <Label text="Audit Log" styleClass="page-title"/>
+        <Label text="Every login, sale, and change made in the system — who did what, and when." styleClass="muted-text" wrapText="true"/>
+    </VBox>
+
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <TextField fx:id="userFilterField" promptText="Filter by user…" prefWidth="180"/>
+        <ComboBox fx:id="actionFilterCombo" prefWidth="200"/>
+        <Label text="From:" styleClass="field-label"/>
+        <DatePicker fx:id="fromDatePicker" prefWidth="140"/>
+        <Label text="To:" styleClass="field-label"/>
+        <DatePicker fx:id="toDatePicker" prefWidth="140"/>
+        <Button text="Apply Filters" styleClass="primary-button" onAction="#onApplyFilters"/>
+        <Button text="Reset" onAction="#onResetFilters"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="Export CSV" onAction="#onExportCsv"/>
+    </HBox>
+
+    <Label fx:id="resultCountLabel" styleClass="muted-text"/>
+
+    <TableView fx:id="logTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colTimestamp" text="Timestamp" prefWidth="150"/>
+            <TableColumn fx:id="colUser" text="User" prefWidth="140"/>
+            <TableColumn fx:id="colAction" text="Action" prefWidth="170"/>
+            <TableColumn fx:id="colDetails" text="Details" prefWidth="340"/>
+        </columns>
+    </TableView>
+</VBox>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.ledger.salesmanager.controller.SalesViewController" spacing="14">
+    <padding><Insets top="22" bottom="22" left="26" right="26"/></padding>
+
+    <HBox alignment="CENTER_LEFT" spacing="12">
+        <VBox>
+            <Label text="Sales" styleClass="page-title"/>
+            <Label text="Record new sales and review history." styleClass="muted-text"/>
+        </VBox>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button fx:id="newSaleButton" text="+ Record Sale" styleClass="primary-button" onAction="#onNewSale"/>
+    </HBox>
+
+    <TableView fx:id="salesTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colInvoice" text="Invoice #" prefWidth="170"/>
+            <TableColumn fx:id="colDate" text="Date" prefWidth="140"/>
+            <TableColumn fx:id="colSalesperson" text="Salesperson" prefWidth="130"/>
+            <TableColumn fx:id="colCustomer" text="Customer" prefWidth="120"/>
+            <TableColumn fx:id="colTotal" text="Total" prefWidth="100"/>
+            <TableColumn fx:id="colProfit" text="Profit" prefWidth="100"/>
+            <TableColumn fx:id="colMethod" text="Method" prefWidth="100"/>
+            <TableColumn fx:id="colStatus" text="Status" prefWidth="90"/>
+            <TableColumn fx:id="colActions" text="Actions" prefWidth="150"/>
+        </columns>
+    </TableView>
+</VBox>

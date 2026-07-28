@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.ledger.salesmanager.controller.ProductsViewController" spacing="14">
+    <padding><Insets top="22" bottom="22" left="26" right="26"/></padding>
+
+    <HBox alignment="CENTER_LEFT" spacing="12">
+        <VBox>
+            <Label text="Products" styleClass="page-title"/>
+            <Label text="Manage your inventory catalog." styleClass="muted-text"/>
+        </VBox>
+        <Region HBox.hgrow="ALWAYS"/>
+        <TextField fx:id="searchField" promptText="Search products…" prefWidth="220"/>
+        <Button fx:id="addButton" text="+ Add Product" styleClass="primary-button" onAction="#onAddProduct"/>
+    </HBox>
+
+    <TableView fx:id="productTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colName" text="Name" prefWidth="160"/>
+            <TableColumn fx:id="colSku" text="SKU" prefWidth="100"/>
+            <TableColumn fx:id="colCategory" text="Category" prefWidth="110"/>
+            <TableColumn fx:id="colWholesale" text="Wholesale" prefWidth="90"/>
+            <TableColumn fx:id="colSelling" text="Selling Price" prefWidth="100"/>
+            <TableColumn fx:id="colTotal" text="Total Qty" prefWidth="80"/>
+            <TableColumn fx:id="colSold" text="Sold" prefWidth="70"/>
+            <TableColumn fx:id="colAvailable" text="Available" prefWidth="80"/>
+            <TableColumn fx:id="colProfit" text="Profit/Item" prefWidth="90"/>
+            <TableColumn fx:id="colActions" text="Actions" prefWidth="140"/>
+        </columns>
+    </TableView>
+</VBox>

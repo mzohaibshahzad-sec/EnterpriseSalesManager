@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.ledger.salesmanager.controller.SetupWizardController"
+            styleClass="root-pane">
+    <top>
+        <VBox alignment="CENTER" spacing="4" styleClass="wizard-header">
+            <padding><Insets top="26" bottom="18" left="20" right="20"/></padding>
+            <Label text="Welcome — Let's set up your store" styleClass="title-text"/>
+            <Label fx:id="stepLabel" text="Step 1 of 3 — Store Information" styleClass="muted-text"/>
+        </VBox>
+    </top>
+
+    <center>
+        <StackPane fx:id="stepContainer">
+            <padding><Insets top="10" bottom="10" left="40" right="40"/></padding>
+
+            <!-- STEP 1: Store Information -->
+            <VBox fx:id="step1Pane" spacing="12" maxWidth="480">
+                <Label text="Store Name *" styleClass="field-label"/>
+                <TextField fx:id="storeNameField" promptText="e.g. Zaibi Traders"/>
+
+                <Label text="Store Address" styleClass="field-label"/>
+                <TextField fx:id="storeAddressField" promptText="Shop #, Street, City"/>
+
+                <Label text="Store Contact Number" styleClass="field-label"/>
+                <TextField fx:id="storeContactField" promptText="+92 300 1234567"/>
+
+                <Label text="Store Email" styleClass="field-label"/>
+                <TextField fx:id="storeEmailField" promptText="store@example.com"/>
+
+                <Label text="Store Logo (optional)" styleClass="field-label"/>
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <Button text="Choose Logo…" onAction="#onChooseLogo"/>
+                    <Label fx:id="logoPathLabel" styleClass="muted-text" text="No file selected"/>
+                </HBox>
+            </VBox>
+
+            <!-- STEP 2: Owner Account -->
+            <VBox fx:id="step2Pane" spacing="12" maxWidth="480" visible="false" managed="false">
+                <Label text="Owner Full Name *" styleClass="field-label"/>
+                <TextField fx:id="ownerNameField" promptText="e.g. Zaibi Khan"/>
+
+                <Label text="Username *" styleClass="field-label"/>
+                <TextField fx:id="ownerUsernameField" promptText="owner"/>
+
+                <Label text="Gmail Address * (used for 2FA login codes)" styleClass="field-label"/>
+                <TextField fx:id="ownerGmailField" promptText="you@gmail.com"/>
+
+                <Label text="Password *" styleClass="field-label"/>
+                <PasswordField fx:id="ownerPasswordField"/>
+
+                <Label text="Confirm Password *" styleClass="field-label"/>
+                <PasswordField fx:id="ownerConfirmPasswordField"/>
+            </VBox>
+
+            <!-- STEP 3: Database + Email (SMTP) configuration -->
+            <VBox fx:id="step3Pane" spacing="12" maxWidth="480" visible="false" managed="false">
+                <Label text="MySQL Database Connection" styleClass="section-title"/>
+                <GridPane hgap="10" vgap="10">
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="50"/>
+                        <ColumnConstraints percentWidth="50"/>
+                    </columnConstraints>
+                    <TextField fx:id="dbHostField" promptText="Host (localhost)" GridPane.rowIndex="0" GridPane.columnIndex="0"/>
+                    <TextField fx:id="dbPortField" promptText="Port (3306)" GridPane.rowIndex="0" GridPane.columnIndex="1"/>
+                    <TextField fx:id="dbNameField" promptText="Database (sales_management)" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
+                    <TextField fx:id="dbUserField" promptText="DB Username (root)" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+                    <PasswordField fx:id="dbPasswordField" promptText="DB Password" GridPane.rowIndex="2" GridPane.columnIndex="0"/>
+                    <Button text="Test Connection" onAction="#onTestDbConnection" GridPane.rowIndex="2" GridPane.columnIndex="1"/>
+                </GridPane>
+                <Label fx:id="dbTestResultLabel" styleClass="muted-text"/>
+
+                <Separator/>
+
+                <Label text="Gmail SMTP (for Owner 2FA login codes)" styleClass="section-title"/>
+                <Label text="Use a Gmail App Password, not your normal Gmail password." styleClass="muted-text" wrapText="true"/>
+                <TextField fx:id="smtpUsernameField" promptText="your.email@gmail.com"/>
+                <PasswordField fx:id="smtpPasswordField" promptText="Gmail App Password"/>
+            </VBox>
+        </StackPane>
+    </center>
+
+    <bottom>
+        <HBox alignment="CENTER_RIGHT" spacing="10" styleClass="wizard-footer">
+            <padding><Insets top="16" bottom="20" left="40" right="40"/></padding>
+            <Label fx:id="errorLabel" styleClass="error-text" HBox.hgrow="ALWAYS" wrapText="true" maxWidth="300"/>
+            <Button fx:id="backButton" text="Back" onAction="#onBack" visible="false"/>
+            <Button fx:id="nextButton" text="Next" styleClass="primary-button" onAction="#onNext"/>
+            <Button fx:id="finishButton" text="Finish Setup" styleClass="primary-button" onAction="#onFinish" visible="false" managed="false"/>
+        </HBox>
+    </bottom>
+</BorderPane>

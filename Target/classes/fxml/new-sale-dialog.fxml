@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.ledger.salesmanager.controller.NewSaleController"
+      spacing="12" prefWidth="620" prefHeight="600" styleClass="root-pane">
+    <padding><Insets top="20" bottom="20" left="24" right="24"/></padding>
+
+    <Label text="Record a Sale" styleClass="section-title"/>
+
+    <HBox spacing="10">
+        <ComboBox fx:id="productCombo" promptText="Select a product…" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+        <TextField fx:id="qtyField" promptText="Qty" prefWidth="70"/>
+        <TextField fx:id="priceField" promptText="Unit price" prefWidth="100"/>
+        <Button text="Add to Cart" onAction="#onAddToCart"/>
+    </HBox>
+
+    <TableView fx:id="cartTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colProduct" text="Product" prefWidth="200"/>
+            <TableColumn fx:id="colQty" text="Qty" prefWidth="60"/>
+            <TableColumn fx:id="colUnitPrice" text="Unit Price" prefWidth="90"/>
+            <TableColumn fx:id="colLineTotal" text="Line Total" prefWidth="100"/>
+            <TableColumn fx:id="colRemove" text="" prefWidth="70"/>
+        </columns>
+    </TableView>
+
+    <HBox spacing="10">
+        <VBox spacing="4" HBox.hgrow="ALWAYS">
+            <Label text="Customer Name (optional)" styleClass="field-label"/>
+            <TextField fx:id="customerField"/>
+        </VBox>
+        <VBox spacing="4" HBox.hgrow="ALWAYS">
+            <Label text="Discount" styleClass="field-label"/>
+            <TextField fx:id="discountField" text="0"/>
+        </VBox>
+    </HBox>
+
+    <HBox spacing="10">
+        <VBox spacing="4" HBox.hgrow="ALWAYS">
+            <Label text="Payment Method" styleClass="field-label"/>
+            <ComboBox fx:id="paymentMethodCombo" maxWidth="Infinity"/>
+        </VBox>
+        <VBox spacing="4" HBox.hgrow="ALWAYS">
+            <Label text="Payment Status" styleClass="field-label"/>
+            <ComboBox fx:id="paymentStatusCombo" maxWidth="Infinity"/>
+        </VBox>
+    </HBox>
+
+    <Label text="Notes" styleClass="field-label"/>
+    <TextField fx:id="notesField"/>
+
+    <Label fx:id="totalLabel" styleClass="kpi-value"/>
+    <Label fx:id="errorLabel" styleClass="error-text" wrapText="true"/>
+
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="Cancel" onAction="#onCancel"/>
+        <Button text="Confirm Sale" styleClass="primary-button" onAction="#onCheckout"/>
+    </HBox>
+</VBox>
