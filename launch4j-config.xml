@@ -1,0 +1,47 @@
+<launch4jConfig>
+    <dontWrapJar>false</dontWrapJar>
+    <headerType>gui</headerType>
+    <jar>target/enterprise-sales-manager.jar</jar>
+    <outfile>target/EnterpriseSalesManager.exe</outfile>
+    <errTitle>Enterprise Sales Manager</errTitle>
+    <cmdLine></cmdLine>
+    <chdir>.</chdir>
+    <priority>normal</priority>
+    <downloadUrl>https://adoptium.net/temurin/releases/?version=21</downloadUrl>
+    <supportUrl></supportUrl>
+    <stayAlive>true</stayAlive>
+    <restartOnCrash>false</restartOnCrash>
+    <manifest></manifest>
+    <icon></icon>
+
+    <classPath>
+        <mainClass>com.ledger.salesmanager.MainApp</mainClass>
+    </classPath>
+
+    <!--
+      No <jre><path> is set below, which means launch4j will look for
+      Java on the END USER's Windows machine (via JAVA_HOME / registry).
+      That means Java 21 must be installed on the Windows PC that runs
+      this .exe. To ship a fully self-contained exe that needs NO Java
+      installed on Windows, download a Windows JDK/JRE 21 zip, extract
+      it into a folder named "jre" next to the .exe, and uncomment the
+      <path>jre</path> line below.
+    -->
+    <jre>
+        <!-- <path>jre</path> -->
+        <minVersion>21.0.0</minVersion>
+        <maxHeapSize>512</maxHeapSize>
+    </jre>
+
+    <versionInfo>
+        <fileVersion>1.0.0.0</fileVersion>
+        <txtFileVersion>1.0.0</txtFileVersion>
+        <fileDescription>Enterprise Sales Manager</fileDescription>
+        <copyright>2026</copyright>
+        <productVersion>1.0.0.0</productVersion>
+        <txtProductVersion>1.0.0</txtProductVersion>
+        <productName>Enterprise Sales Manager</productName>
+        <internalName>EnterpriseSalesManager</internalName>
+        <originalFilename>EnterpriseSalesManager.exe</originalFilename>
+    </versionInfo>
+</launch4jConfig>

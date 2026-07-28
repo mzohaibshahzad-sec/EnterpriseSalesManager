@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Enterprise Sales Manager — Visual Preview</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#0B1220; --surface:#141B2E; --surface-light:#1B2440; --border:#26304C;
+  --gold:#C9A961; --gold-soft:rgba(201,169,97,.15); --teal:#34D3A6; --red:#F0665B;
+  --text:#ECEEF6; --muted:#8A93AC; --faint:#5B6480;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:'Inter',sans-serif;background:#05070d;color:var(--text);}
+.display{font-family:'Fraunces',serif;}
+.mono{font-family:'JetBrains Mono',monospace;}
+
+/* ---------- Preview chrome (not part of the real app) ---------- */
+.preview-bar{
+  position:sticky; top:0; z-index:100;
+  background:#05070d; border-bottom:1px solid var(--border);
+  padding:10px 18px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+}
+.preview-bar .label{font-size:11px; letter-spacing:1.5px; color:var(--faint); text-transform:uppercase; margin-right:6px;}
+.preview-bar button{
+  background:var(--surface-light); color:var(--muted); border:1px solid var(--border);
+  border-radius:8px; padding:7px 13px; font-size:12.5px; cursor:pointer; transition:.15s;
+  font-family:'Inter',sans-serif;
+}
+.preview-bar button:hover{background:#232d4d; color:var(--text);}
+.preview-bar button.active{background:var(--gold-soft); color:var(--gold); border-color:var(--gold); font-weight:600;}
+.preview-note{
+  font-size:11.5px; color:var(--faint); padding:8px 18px; background:#05070d;
+  border-bottom:1px dashed var(--border);
+}
+.device{
+  max-width:1300px; margin:22px auto 60px; border-radius:14px; overflow:hidden;
+  border:1px solid var(--border); box-shadow:0 30px 80px -30px rgba(0,0,0,.7);
+  background:var(--bg);
+}
+.window-dots{display:flex; gap:6px; padding:10px 14px; background:#05070d; border-bottom:1px solid var(--border);}
+.window-dots span{width:10px;height:10px;border-radius:50%; display:inline-block;}
+.d1{background:#F0665B;} .d2{background:#C9A961;} .d3{background:#34D3A6;}
+
+/* ---------- Shared app styles ---------- */
+.screen{display:none; min-height:640px;}
+.screen.active{display:block;}
+.center-screen{min-height:640px; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:40px;}
+.title-text{color:var(--gold); font-size:24px; font-weight:700; margin:0;}
+.page-title{font-size:24px; font-weight:700; margin:0;}
+.muted{color:var(--muted); font-size:12.5px;}
+.faint{color:var(--faint); font-size:11.5px;}
+.error-text{color:var(--red); font-size:12.5px;}
+.card{background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:20px;}
+.field-label{font-size:12.5px; font-weight:600; margin-bottom:6px; display:block;}
+input[type=text], input[type=password], input[type=email], select, textarea{
+  width:100%; background:var(--surface-light); border:1px solid var(--border); border-radius:8px;
+  padding:9px 11px; color:var(--text); font-size:13.5px; font-family:'Inter',sans-serif; margin-bottom:14px;
+}
+.btn{
+  display:inline-flex; align-items:center; gap:6px; border:1px solid var(--border); background:var(--surface-light);
+  color:var(--text); border-radius:8px; padding:9px 16px; font-size:13px; font-weight:600; cursor:pointer;
+}
+.btn-primary{background:linear-gradient(135deg,var(--gold),#B08D4C); color:#1a1408; border:none;}
+.btn-danger{background:var(--red); color:#2a0a08; border:none;}
+.row{display:flex; gap:14px;}
+.col{flex:1;}
+
+/* ---------- Setup Wizard ---------- */
+.wizard-steps{display:flex; gap:8px; justify-content:center; margin-bottom:18px;}
+.wizard-steps .step{width:34px; height:34px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  font-size:13px; font-weight:700; border:2px solid var(--border); color:var(--faint);}
+.wizard-steps .step.done{background:var(--gold); border-color:var(--gold); color:#1a1408;}
+.wizard-steps .step.current{border-color:var(--gold); color:var(--gold);}
+
+/* ---------- Viewer dashboard ---------- */
+.viewer-top{background:var(--surface); border-bottom:1px solid var(--border); padding:16px 26px;
+  display:flex; align-items:center; gap:14px;}
+.logo-badge{width:42px; height:42px; border-radius:10px; background:var(--gold-soft); display:flex; align-items:center; justify-content:center; font-size:20px;}
+.viewer-grid{padding:22px 26px; display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:16px;}
+.product-card{background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:14px;}
+.product-thumb{width:100%; height:100px; border-radius:8px; background:linear-gradient(135deg,#1B2440,#26304C);
+  display:flex; align-items:center; justify-content:center; font-size:28px; margin-bottom:10px;}
+.product-card h4{margin:0 0 4px; font-size:14px;}
+.price{color:var(--gold); font-weight:700; font-size:15px;}
+.stock-ok{color:var(--teal); font-size:11.5px;} .stock-out{color:var(--red); font-size:11.5px; font-weight:700;}
+
+/* ---------- App shell ---------- */
+.shell{display:flex; min-height:700px;}
+.sidebar{width:220px; flex-shrink:0; background:var(--surface); border-right:1px solid var(--border); padding:20px 12px; display:flex; flex-direction:column;}
+.sidebar .brand{padding:6px 8px 18px;}
+.nav-btn{display:flex; align-items:center; gap:10px; width:100%; text-align:left; background:transparent; border:none;
+  color:var(--muted); border-radius:8px; padding:10px 12px; font-size:13.5px; cursor:pointer; margin-bottom:2px; font-family:'Inter',sans-serif;}
+.nav-btn:hover{background:rgba(255,255,255,.05); color:var(--text);}
+.nav-btn.active{background:var(--gold-soft); color:var(--gold); font-weight:600;}
+.sidebar .spacer{flex:1;}
+.content{flex:1; padding:24px 28px; overflow:auto; background:var(--bg);}
+.subview{display:none;}
+.subview.active{display:block;}
+
+.kpi-row{display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:14px; margin-bottom:20px;}
+.kpi{background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:16px;}
+.kpi .val{font-family:'JetBrains Mono',monospace; font-size:21px; font-weight:700;}
+.charts-row{display:grid; grid-template-columns:1.4fr 1fr; gap:16px; margin-bottom:16px;}
+.charts-row2{display:grid; grid-template-columns:1fr 1fr; gap:16px;}
+canvas{max-width:100%;}
+
+table{width:100%; border-collapse:collapse; font-size:13px;}
+th{text-align:left; padding:10px 12px; font-size:11px; color:var(--faint); text-transform:uppercase; letter-spacing:.5px; background:var(--surface-light);}
+td{padding:11px 12px; border-top:1px solid var(--border);}
+tr:hover td{background:rgba(201,169,97,.04);}
+.badge{padding:2px 9px; border-radius:999px; font-size:10.5px; font-weight:700; text-transform:uppercase;}
+.badge-owner{background:var(--gold-soft); color:var(--gold);}
+.badge-saler{background:rgba(52,211,166,.15); color:var(--teal);}
+.badge-viewer{background:rgba(125,166,224,.15); color:#7DA6E0;}
+
+.report-card{background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:18px; flex:1;}
+.avatar{width:64px; height:64px; border-radius:50%; background:linear-gradient(135deg,var(--gold),#8a6f3a);
+  display:flex; align-items:center; justify-content:center; font-weight:700; color:#1a1408; font-size:22px; margin:0 auto 10px;}
+
+/* ---------- Add/Edit Product modal ---------- */
+.modal-overlay{
+  display:none; position:fixed; inset:0; background:rgba(5,8,16,.7); backdrop-filter:blur(3px);
+  align-items:center; justify-content:center; z-index:200;
+}
+.modal-overlay.open{display:flex;}
+.modal-card{
+  width:440px; max-width:92vw; max-height:88vh; overflow-y:auto;
+  background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:22px;
+}
+.image-upload-row{display:flex; gap:12px; align-items:center; margin-bottom:6px;}
+.image-thumb{
+  width:64px; height:64px; border-radius:10px; background:var(--surface-light); border:1px dashed var(--border);
+  display:flex; align-items:center; justify-content:center; font-size:24px; overflow:hidden; flex-shrink:0;
+}
+.image-thumb img{width:100%; height:100%; object-fit:cover;}
+</style>
+</head>
+<body>
+
+<div class="preview-bar">
+  <span class="label">Preview:</span>
+  <button data-screen="wizard" class="scr-btn active">Setup Wizard</button>
+  <button data-screen="viewer" class="scr-btn">Viewer Dashboard</button>
+  <button data-screen="login" class="scr-btn">Login</button>
+  <button data-screen="otp" class="scr-btn">OTP Verification</button>
+  <button data-screen="shell" class="scr-btn">App (signed in)</button>
+</div>
+<div class="preview-note">Ye ek static HTML mockup hai jo asal JavaFX app ke design ko dikhata hai — buttons yahan sirf preview switch karte hain, real app mein nahi honge.</div>
+
+<div class="device">
+  <div class="window-dots"><span class="d1"></span><span class="d2"></span><span class="d3"></span></div>
+
+  <!-- ======================= SETUP WIZARD ======================= -->
+  <div class="screen active" id="screen-wizard">
+    <div class="center-screen">
+      <div class="wizard-steps">
+        <div class="step done">1</div>
+        <div class="step current">2</div>
+        <div class="step">3</div>
+      </div>
+      <h1 class="title-text" style="text-align:center;">Welcome — Let's set up your store</h1>
+      <p class="muted" style="text-align:center; margin-bottom:20px;">Step 2 of 3 — Owner Account</p>
+
+      <div class="card" style="width:420px;">
+        <label class="field-label">Owner Full Name *</label>
+        <input type="text" value="Zaibi Khan">
+        <label class="field-label">Username *</label>
+        <input type="text" value="owner">
+        <label class="field-label">Gmail Address * (used for 2FA login codes)</label>
+        <input type="text" value="zaibi.khan@gmail.com">
+        <label class="field-label">Password *</label>
+        <input type="password" value="********">
+        <label class="field-label">Confirm Password *</label>
+        <input type="password" value="********">
+        <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:6px;">
+          <button class="btn">Back</button>
+          <button class="btn btn-primary">Next →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================= VIEWER DASHBOARD ======================= -->
+  <div class="screen" id="screen-viewer">
+    <div class="viewer-top">
+      <div class="logo-badge">🏪</div>
+      <div>
+        <div class="page-title" style="font-size:18px;">Zaibi Traders</div>
+        <div class="muted">Product Catalog</div>
+      </div>
+      <div style="flex:1;"></div>
+      <input type="text" placeholder="Search products…" style="width:220px; margin:0;">
+      <button class="btn">Salesperson Login</button>
+      <button class="btn btn-primary">Admin Login</button>
+    </div>
+    <div class="viewer-grid" id="viewerGrid"></div>
+  </div>
+
+  <!-- ======================= LOGIN ======================= -->
+  <div class="screen" id="screen-login">
+    <div class="center-screen">
+      <h1 class="title-text">Enterprise Sales Manager</h1>
+      <p class="muted" style="margin-bottom:20px;">Sign in to continue</p>
+      <div class="card" style="width:320px;">
+        <label class="field-label">Username</label>
+        <input type="text" placeholder="username">
+        <label class="field-label">Password</label>
+        <input type="password" placeholder="••••••••">
+        <button class="btn btn-primary" style="width:100%; justify-content:center; margin-bottom:8px;">Sign In</button>
+        <button class="btn" style="width:100%; justify-content:center;">Back to Catalog</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================= OTP ======================= -->
+  <div class="screen" id="screen-otp">
+    <div class="center-screen">
+      <h1 class="title-text">Verify Your Identity</h1>
+      <p class="muted" style="margin-bottom:20px; text-align:center;">A 6-digit code was sent to<br>z***i@gmail.com</p>
+      <div class="card" style="width:300px; text-align:center;">
+        <label class="field-label" style="text-align:left;">Enter OTP Code</label>
+        <input type="text" value="4 8 2 9 1 6" style="text-align:center; font-size:20px; letter-spacing:4px;">
+        <p class="faint" style="margin:-6px 0 14px;">Code expires in 04:52</p>
+        <button class="btn btn-primary" style="width:100%; justify-content:center; margin-bottom:8px;">Verify</button>
+        <button class="btn" style="width:100%; justify-content:center; margin-bottom:8px;">Resend Code</button>
+        <button class="btn" style="width:100%; justify-content:center;">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================= APP SHELL ======================= -->
+  <div class="screen" id="screen-shell">
+    <div class="shell">
+      <div class="sidebar">
+        <div class="brand">
+          <div class="title-text" style="font-size:17px;">Enterprise Sales</div>
+          <div class="muted">Management System</div>
+        </div>
+        <button class="nav-btn active" data-sub="dashboard">📊 Dashboard</button>
+        <button class="nav-btn" data-sub="products">📦 Products</button>
+        <button class="nav-btn" data-sub="sales">🧾 Sales</button>
+        <button class="nav-btn" data-sub="users">👤 Users</button>
+        <button class="nav-btn" data-sub="reports">📁 Reports</button>
+        <button class="nav-btn" data-sub="auditlog">🕵️ Audit Log</button>
+        <button class="nav-btn" data-sub="settings">⚙️ Settings</button>
+        <button class="nav-btn" data-sub="profile">🙍 Profile</button>
+        <div class="spacer"></div>
+        <div style="border-top:1px solid var(--border); padding-top:12px;">
+          <div class="field-label" style="margin-bottom:2px;">Zaibi Khan</div>
+          <span class="badge badge-owner">Owner</span>
+          <button class="btn" style="width:100%; justify-content:center; margin-top:10px;">Sign Out</button>
+        </div>
+      </div>
+
+      <div class="content">
+        <!-- DASHBOARD -->
+        <div class="subview active" id="sub-dashboard">
+          <h2 class="page-title">Dashboard</h2>
+          <p class="muted" style="margin-bottom:16px;">Live overview of your business.</p>
+          <div class="kpi-row">
+            <div class="kpi"><div class="val">128</div><div class="muted">Total Products</div></div>
+            <div class="kpi"><div class="val" style="color:var(--gold)">Rs 84,500</div><div class="muted">Revenue Today</div></div>
+            <div class="kpi"><div class="val" style="color:var(--teal)">Rs 21,300</div><div class="muted">Profit Today</div></div>
+            <div class="kpi"><div class="val" style="color:var(--gold)">Rs 1,920,000</div><div class="muted">Stock Value (Wholesale)</div></div>
+            <div class="kpi"><div class="val" style="color:var(--red)">7</div><div class="muted">Low Stock Items</div></div>
+          </div>
+          <div class="charts-row">
+            <div class="card"><div class="field-label">Revenue &amp; Profit Trend (14 days)</div><canvas id="trendChart" height="130"></canvas></div>
+            <div class="card"><div class="field-label">Sales Mix</div><canvas id="mixChart" height="130"></canvas></div>
+          </div>
+          <div class="charts-row2">
+            <div class="card"><div class="field-label">Top Selling Products</div><canvas id="topChart" height="120"></canvas></div>
+            <div class="card">
+              <div class="field-label">Low Stock Watchlist</div>
+              <table>
+                <tr><td>Cotton Fabric Roll</td><td style="text-align:right; color:var(--red); font-weight:700;">3 left</td></tr>
+                <tr><td>Steel Hinges (set)</td><td style="text-align:right; color:var(--red); font-weight:700;">4 left</td></tr>
+                <tr><td>Wall Paint 1L</td><td style="text-align:right; color:var(--red); font-weight:700;">5 left</td></tr>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- PRODUCTS -->
+        <div class="subview" id="sub-products">
+          <div style="display:flex; align-items:center; margin-bottom:16px;">
+            <div><h2 class="page-title">Products</h2><p class="muted">Manage your inventory catalog.</p></div>
+            <div style="flex:1;"></div>
+            <input type="text" placeholder="Search products…" style="width:200px; margin:0 10px 0 0;">
+            <button class="btn btn-primary" onclick="openProductModal()">+ Add Product</button>
+          </div>
+          <table>
+            <tr><th>Name</th><th>SKU</th><th>Category</th><th>Wholesale</th><th>Selling</th><th>Total</th><th>Sold</th><th>Available</th><th>Profit/Item</th><th>Actions</th></tr>
+            <tr><td>Cotton Fabric Roll</td><td class="mono">CFR-2291</td><td>Textiles</td><td class="mono">Rs 800</td><td class="mono">Rs 1,200</td><td>50</td><td>47</td><td style="color:var(--red); font-weight:700;">3</td><td class="mono" style="color:var(--teal)">Rs 400</td><td><button class="btn">Edit</button> <button class="btn btn-danger">Delete</button></td></tr>
+            <tr><td>Steel Hinges (set)</td><td class="mono">SH-1042</td><td>Hardware</td><td class="mono">Rs 150</td><td class="mono">Rs 250</td><td>100</td><td>96</td><td style="color:var(--red); font-weight:700;">4</td><td class="mono" style="color:var(--teal)">Rs 100</td><td><button class="btn">Edit</button> <button class="btn btn-danger">Delete</button></td></tr>
+            <tr><td>Wall Paint 1L</td><td class="mono">WP-3390</td><td>Paints</td><td class="mono">Rs 620</td><td class="mono">Rs 950</td><td>40</td><td>35</td><td style="color:var(--red); font-weight:700;">5</td><td class="mono" style="color:var(--teal)">Rs 330</td><td><button class="btn">Edit</button> <button class="btn btn-danger">Delete</button></td></tr>
+            <tr><td>LED Bulb 12W</td><td class="mono">LB-0087</td><td>Electrical</td><td class="mono">Rs 210</td><td class="mono">Rs 350</td><td>200</td><td>140</td><td>60</td><td class="mono" style="color:var(--teal)">Rs 140</td><td><button class="btn">Edit</button> <button class="btn btn-danger">Delete</button></td></tr>
+          </table>
+        </div>
+
+        <!-- SALES -->
+        <div class="subview" id="sub-sales">
+          <div style="display:flex; align-items:center; margin-bottom:16px;">
+            <div><h2 class="page-title">Sales</h2><p class="muted">Record new sales and review history.</p></div>
+            <div style="flex:1;"></div>
+            <button class="btn btn-primary">+ Record Sale</button>
+          </div>
+          <table>
+            <tr><th>Invoice #</th><th>Date</th><th>Salesperson</th><th>Customer</th><th>Total</th><th>Profit</th><th>Method</th><th>Status</th><th>Actions</th></tr>
+            <tr><td class="mono">INV-20260704-482</td><td>2026-07-04 15:20</td><td>Ali Raza</td><td>Walk-in</td><td class="mono">Rs 3,600</td><td class="mono" style="color:var(--teal)">Rs 1,200</td><td>CASH</td><td>PAID</td><td><button class="btn">Invoice PDF</button> <button class="btn btn-danger">Void</button></td></tr>
+            <tr><td class="mono">INV-20260704-317</td><td>2026-07-04 12:05</td><td>Zaibi Khan</td><td>Hamza Traders</td><td class="mono">Rs 12,800</td><td class="mono" style="color:var(--teal)">Rs 4,150</td><td>BANK_TRANSFER</td><td>PAID</td><td><button class="btn">Invoice PDF</button> <button class="btn btn-danger">Void</button></td></tr>
+            <tr><td class="mono">INV-20260703-905</td><td>2026-07-03 18:42</td><td>Ali Raza</td><td>Walk-in</td><td class="mono">Rs 950</td><td class="mono" style="color:var(--teal)">Rs 330</td><td>CASH</td><td>PAID</td><td><button class="btn">Invoice PDF</button> <button class="btn btn-danger">Void</button></td></tr>
+          </table>
+        </div>
+
+        <!-- USERS -->
+        <div class="subview" id="sub-users">
+          <div style="display:flex; align-items:center; margin-bottom:16px;">
+            <div><h2 class="page-title">Users</h2><p class="muted">Manage Owner and Salesperson accounts.</p></div>
+            <div style="flex:1;"></div>
+            <button class="btn btn-primary">+ Add User</button>
+          </div>
+          <table>
+            <tr><th>Full Name</th><th>Username</th><th>Gmail</th><th>Role</th><th>Status</th><th>Last Login</th><th>Actions</th></tr>
+            <tr><td>Zaibi Khan</td><td class="mono">owner</td><td>zaibi.khan@gmail.com</td><td><span class="badge badge-owner">Owner</span></td><td>Active</td><td>2026-07-05 09:12</td><td><button class="btn">Reset Password</button> <button class="btn btn-danger">Delete</button></td></tr>
+            <tr><td>Ali Raza</td><td class="mono">ali_raza</td><td>ali.raza@gmail.com</td><td><span class="badge badge-saler">Salesperson</span></td><td>Active</td><td>2026-07-04 15:18</td><td><button class="btn">Deactivate</button> <button class="btn">Reset Password</button> <button class="btn btn-danger">Delete</button></td></tr>
+          </table>
+        </div>
+
+        <!-- REPORTS -->
+        <div class="subview" id="sub-reports">
+          <h2 class="page-title">Reports</h2>
+          <p class="muted" style="margin-bottom:16px;">Export product and sales reports for any date range.</p>
+          <div class="row" style="align-items:center; margin-bottom:16px;">
+            <span class="field-label" style="margin:0;">From:</span><input type="text" value="2026-06-06" style="width:130px; margin:0;">
+            <span class="field-label" style="margin:0;">To:</span><input type="text" value="2026-07-05" style="width:130px; margin:0;">
+          </div>
+          <div class="row">
+            <div class="report-card">
+              <div class="field-label">Product / Inventory Report</div>
+              <p class="muted">Full catalog with stock levels and profit margins.</p>
+              <button class="btn">Export CSV</button> <button class="btn">Export Excel</button> <button class="btn">Export PDF</button>
+            </div>
+            <div class="report-card">
+              <div class="field-label">Sales / Profit Report</div>
+              <p class="muted">All sales within the selected date range.</p>
+              <button class="btn">Export CSV</button> <button class="btn">Export Excel</button> <button class="btn">Export PDF</button>
+            </div>
+          </div>
+          <div class="card" style="margin-top:16px;">
+            <div class="field-label">Database Backup &amp; Restore</div>
+            <p class="muted">Requires mysqldump / mysql client tools installed and on PATH.</p>
+            <button class="btn">Backup Now</button> <button class="btn btn-danger">Restore from File…</button>
+          </div>
+        </div>
+
+        <!-- AUDIT LOG -->
+        <div class="subview" id="sub-auditlog">
+          <h2 class="page-title">Audit Log</h2>
+          <p class="muted" style="margin-bottom:16px;">Every login, sale, and change made in the system — who did what, and when.</p>
+          <div class="row" style="align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:10px;">
+            <input type="text" placeholder="Filter by user…" style="width:160px; margin:0;">
+            <select style="width:180px; margin:0;">
+              <option>ALL</option>
+              <option>LOGIN</option>
+              <option>SALE_RECORDED</option>
+              <option>SALE_VOIDED</option>
+              <option>PRODUCT_CREATED</option>
+              <option>PRODUCT_UPDATED</option>
+              <option>USER_CREATED</option>
+              <option>PASSWORD_RESET</option>
+            </select>
+            <span class="field-label" style="margin:0;">From:</span><input type="text" value="2026-06-06" style="width:120px; margin:0;">
+            <span class="field-label" style="margin:0;">To:</span><input type="text" value="2026-07-05" style="width:120px; margin:0;">
+            <button class="btn btn-primary">Apply Filters</button>
+            <button class="btn">Reset</button>
+            <div style="flex:1;"></div>
+            <button class="btn">Export CSV</button>
+          </div>
+          <p class="muted" style="margin-bottom:8px;">14 entries</p>
+          <table>
+            <tr><th>Timestamp</th><th>User</th><th>Action</th><th>Details</th></tr>
+            <tr><td class="mono">2026-07-05 09:12:03</td><td>Zaibi Khan</td><td><span class="badge badge-owner">LOGIN</span></td><td>OWNER logged in (2FA verified)</td></tr>
+            <tr><td class="mono">2026-07-04 15:20:41</td><td>Ali Raza</td><td><span class="badge badge-saler">SALE_RECORDED</span></td><td>Invoice INV-20260704153012-482 — 2 item(s)</td></tr>
+            <tr><td class="mono">2026-07-04 14:02:10</td><td>Zaibi Khan</td><td><span class="badge badge-owner">PRODUCT_UPDATED</span></td><td>Wall Paint 1L</td></tr>
+            <tr><td class="mono">2026-07-04 12:05:55</td><td>Zaibi Khan</td><td><span class="badge badge-saler">SALE_RECORDED</span></td><td>Invoice INV-20260704120512-317 — 4 item(s)</td></tr>
+            <tr><td class="mono">2026-07-03 18:42:09</td><td>Ali Raza</td><td><span class="badge badge-saler">SALE_RECORDED</span></td><td>Invoice INV-20260703184209-905 — 1 item(s)</td></tr>
+            <tr><td class="mono">2026-07-03 10:15:37</td><td>Zaibi Khan</td><td><span class="badge badge-owner">USER_CREATED</span></td><td>ali_raza (SALESPERSON)</td></tr>
+            <tr><td class="mono">2026-07-02 09:00:21</td><td>Zaibi Khan</td><td><span class="badge badge-owner">PASSWORD_RESET</span></td><td>Reset password for ali_raza</td></tr>
+            <tr><td class="mono">2026-07-01 17:30:02</td><td>—</td><td><span style="color:var(--red); font-weight:700;">FAILED LOGIN</span></td><td>Username: ali_raza (wrong password)</td></tr>
+          </table>
+        </div>
+
+        <!-- SETTINGS -->
+        <div class="subview" id="sub-settings">
+          <h2 class="page-title">Settings</h2>
+          <p class="muted" style="margin-bottom:16px;">Store branding, database, email and appearance.</p>
+          <div class="card" style="margin-bottom:16px;">
+            <div class="field-label">Store Information</div>
+            <label class="field-label">Store Name</label><input type="text" value="Zaibi Traders">
+            <label class="field-label">Store Address</label><input type="text" value="Shop #12, Anarkali Bazaar, Lahore">
+            <button class="btn">Save Store Info</button>
+          </div>
+          <div class="card" style="margin-bottom:16px;">
+            <div class="field-label">Gmail SMTP (Owner 2FA)</div>
+            <p class="muted">Use a Gmail App Password, not your regular password.</p>
+            <input type="text" value="zaibi.khan@gmail.com">
+            <button class="btn">Save Email Settings</button>
+          </div>
+          <div class="card">
+            <div class="field-label">Appearance</div>
+            <button class="btn btn-primary">🌙 Dark Mode</button>
+          </div>
+        </div>
+
+        <!-- PROFILE -->
+        <div class="subview" id="sub-profile">
+          <h2 class="page-title">Profile</h2>
+          <p class="muted" style="margin-bottom:16px;">Manage your account details.</p>
+          <div class="row">
+            <div class="card" style="width:260px; text-align:center;">
+              <div class="avatar">ZK</div>
+              <div style="font-weight:700;">Zaibi Khan</div>
+              <div class="muted">@owner</div>
+              <div class="field-label" style="margin-top:6px;">OWNER</div>
+              <div class="muted">Last login: 2026-07-05 09:12</div>
+            </div>
+            <div class="card" style="flex:1;">
+              <div class="field-label">Account Settings</div>
+              <label class="field-label">Full Name</label><input type="text" value="Zaibi Khan">
+              <label class="field-label">Gmail Address</label><input type="text" value="zaibi.khan@gmail.com">
+              <div class="row">
+                <div class="col"><label class="field-label">New Password</label><input type="password" placeholder="Leave blank to keep current"></div>
+                <div class="col"><label class="field-label">Confirm New Password</label><input type="password"></div>
+              </div>
+              <button class="btn btn-primary">Save Changes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======================= ADD/EDIT PRODUCT MODAL ======================= -->
+<div class="modal-overlay" id="productModalOverlay">
+  <div class="modal-card">
+    <div style="display:flex; align-items:center; margin-bottom:6px;">
+      <div class="field-label" style="font-size:15px; margin:0;">Add Product</div>
+      <div style="flex:1;"></div>
+      <button class="btn" style="padding:4px 10px;" onclick="closeProductModal()">✕</button>
+    </div>
+
+    <label class="field-label">Product Name *</label>
+    <input type="text" placeholder="e.g. Cotton Fabric Roll">
+
+    <div class="row">
+      <div class="col"><label class="field-label">Category</label><input type="text" value="Textiles"></div>
+      <div class="col"><label class="field-label">Brand</label><input type="text" placeholder="optional"></div>
+    </div>
+
+    <label class="field-label">SKU / Barcode</label>
+    <div class="row"><input type="text" placeholder="e.g. CFR-2291" style="flex:1;"><button class="btn" style="height:38px;">Generate</button></div>
+
+    <div class="row">
+      <div class="col"><label class="field-label">Wholesale Price *</label><input type="text" value="800"></div>
+      <div class="col"><label class="field-label">Selling Price *</label><input type="text" value="1200"></div>
+    </div>
+    <div class="row">
+      <div class="col"><label class="field-label">Total Quantity *</label><input type="text" value="50"></div>
+      <div class="col"><label class="field-label">Min Stock Level</label><input type="text" value="5"></div>
+    </div>
+
+    <label class="field-label">Product Image (optional)</label>
+    <div class="image-upload-row">
+      <div class="image-thumb" id="imgThumb">🖼️</div>
+      <div style="flex:1;">
+        <div style="display:flex; gap:8px; margin-bottom:6px;">
+          <label class="btn" style="cursor:pointer; margin:0;">
+            Choose Image…
+            <input type="file" accept="image/*" id="imgFileInput" style="display:none;" onchange="handleImagePick(event)">
+          </label>
+          <button class="btn" onclick="removeImagePreview()">Remove</button>
+        </div>
+        <div class="faint" id="imgPathLabel">No image selected — this field is optional</div>
+      </div>
+    </div>
+
+    <div class="faint" style="margin:10px 0;">Profit per item: <span class="mono" style="color:var(--teal)">Rs 400</span></div>
+
+    <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:6px;">
+      <button class="btn" onclick="closeProductModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="closeProductModal()">Save Product</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ---- Add/Edit Product modal ----
+function openProductModal() {
+  document.getElementById('productModalOverlay').classList.add('open');
+}
+function closeProductModal() {
+  document.getElementById('productModalOverlay').classList.remove('open');
+}
+function handleImagePick(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('imgThumb').innerHTML = `<img src="${e.target.result}" alt="preview">`;
+    document.getElementById('imgPathLabel').textContent = file.name;
+  };
+  reader.readAsDataURL(file);
+}
+function removeImagePreview() {
+  document.getElementById('imgThumb').innerHTML = '🖼️';
+  document.getElementById('imgPathLabel').textContent = 'No image selected — this field is optional';
+  document.getElementById('imgFileInput').value = '';
+}
+document.getElementById('productModalOverlay').addEventListener('mousedown', e => {
+  if (e.target.id === 'productModalOverlay') closeProductModal();
+});
+
+// ---- Screen switching (top preview bar) ----
+document.querySelectorAll('.scr-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.scr-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen-' + btn.dataset.screen).classList.add('active');
+  });
+});
+
+// ---- Sidebar nav switching (inside the app shell) ----
+document.querySelectorAll('.nav-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.subview').forEach(s => s.classList.remove('active'));
+    document.getElementById('sub-' + btn.dataset.sub).classList.add('active');
+  });
+});
+
+// ---- Viewer product cards (sample catalog) ----
+const products = [
+  {name:'Cotton Fabric Roll', price:1200, stock:3, emoji:'🧵'},
+  {name:'Steel Hinges (set)', price:250, stock:4, emoji:'🔩'},
+  {name:'Wall Paint 1L', price:950, stock:5, emoji:'🎨'},
+  {name:'LED Bulb 12W', price:350, stock:60, emoji:'💡'},
+  {name:'Ceramic Tile (box)', price:2200, stock:22, emoji:'🧱'},
+  {name:'PVC Pipe 2m', price:480, stock:0, emoji:'🧯'},
+];
+const grid = document.getElementById('viewerGrid');
+products.forEach(p => {
+  const card = document.createElement('div');
+  card.className = 'product-card';
+  card.innerHTML = `
+    <div class="product-thumb">${p.emoji}</div>
+    <h4>${p.name}</h4>
+    <div class="price">Rs ${p.price.toLocaleString()}</div>
+    <div class="${p.stock === 0 ? 'stock-out' : 'stock-ok'}">${p.stock === 0 ? 'Out of stock' : p.stock + ' in stock'}</div>
+  `;
+  grid.appendChild(card);
+});
+
+// ---- Charts (Dashboard) ----
+Chart.defaults.color = '#8A93AC';
+Chart.defaults.font.family = "'Inter', sans-serif";
+
+new Chart(document.getElementById('trendChart'), {
+  type: 'line',
+  data: {
+    labels: ['Jun 22','Jun 24','Jun 26','Jun 28','Jun 30','Jul 2','Jul 4'],
+    datasets: [
+      { label:'Revenue', data:[42000,51000,38000,60000,72000,65000,84500], borderColor:'#C9A961', backgroundColor:'rgba(201,169,97,.15)', tension:.35, fill:true },
+      { label:'Profit', data:[12000,15000,10500,17000,21000,19000,21300], borderColor:'#34D3A6', backgroundColor:'rgba(52,211,166,.12)', tension:.35, fill:true }
+    ]
+  },
+  options: { plugins:{legend:{labels:{boxWidth:12}}}, scales:{ x:{grid:{color:'#26304C'}}, y:{grid:{color:'#26304C'}} } }
+});
+
+new Chart(document.getElementById('mixChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Cotton Fabric','Steel Hinges','Wall Paint','LED Bulb','Other'],
+    datasets: [{ data:[32,21,18,15,14], backgroundColor:['#C9A961','#34D3A6','#7DA6E0','#F0665B','#5B6480'], borderColor:'#141B2E', borderWidth:2 }]
+  },
+  options: { plugins:{legend:{position:'bottom', labels:{boxWidth:10,font:{size:10.5}}}} }
+});
+
+new Chart(document.getElementById('topChart'), {
+  type: 'bar',
+  data: {
+    labels: ['Cotton Fabric','Steel Hinges','Wall Paint','LED Bulb','Ceramic Tile'],
+    datasets: [{ data:[47,96,35,140,22], backgroundColor:'#C9A961', borderRadius:4 }]
+  },
+  options: { indexAxis:'y', plugins:{legend:{display:false}}, scales:{ x:{grid:{color:'#26304C'}}, y:{grid:{display:false}} } }
+});
+</script>
+</body>
+</html>

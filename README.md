@@ -1,6 +1,3 @@
-# EnterpriseSalesManager
-Its an Enterprise Sales Manager Software Which developed in JAVA Maven
-
 # Enterprise Product Sales Management System
 
 A desktop Product Sales Management application built with **Java 21, JavaFX, MySQL/JDBC, Maven**, following an MVC-style architecture (`model` / `dao` / `service` / `controller` + FXML views).
@@ -97,3 +94,4 @@ Local settings (DB credentials, SMTP credentials, theme, setup-completed flag) a
 ```bash
 mvn clean package
 java -jar target/enterprise-sales-manager.jar
+```
