@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.ledger.salesmanager.controller.UsersViewController" spacing="14">
+    <padding><Insets top="22" bottom="22" left="26" right="26"/></padding>
+
+    <HBox alignment="CENTER_LEFT" spacing="12">
+        <VBox>
+            <Label text="Users" styleClass="page-title"/>
+            <Label text="Manage Owner and Salesperson accounts." styleClass="muted-text"/>
+        </VBox>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="+ Add User" styleClass="primary-button" onAction="#onAddUser"/>
+    </HBox>
+
+    <TableView fx:id="userTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="colName" text="Full Name" prefWidth="160"/>
+            <TableColumn fx:id="colUsername" text="Username" prefWidth="120"/>
+            <TableColumn fx:id="colGmail" text="Gmail" prefWidth="180"/>
+            <TableColumn fx:id="colRole" text="Role" prefWidth="100"/>
+            <TableColumn fx:id="colStatus" text="Status" prefWidth="90"/>
+            <TableColumn fx:id="colLastLogin" text="Last Login" prefWidth="140"/>
+            <TableColumn fx:id="colActions" text="Actions" prefWidth="220"/>
+        </columns>
+    </TableView>
+</VBox>

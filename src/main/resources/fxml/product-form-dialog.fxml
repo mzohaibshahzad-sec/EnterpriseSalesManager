@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.ledger.salesmanager.controller.ProductFormController"
+      spacing="10" prefWidth="420" styleClass="root-pane">
+    <padding><Insets top="20" bottom="20" left="24" right="24"/></padding>
+
+    <Label fx:id="titleLabel" text="Add Product" styleClass="section-title"/>
+
+    <Label text="Product Name *" styleClass="field-label"/>
+    <TextField fx:id="nameField"/>
+
+    <HBox spacing="10">
+        <VBox spacing="4" HBox.hgrow="ALWAYS">
+            <Label text="Category" styleClass="field-label"/>
+            <ComboBox fx:id="categoryCombo" maxWidth="Infinity" editable="false"/>
+        </VBox>
+        <VBox spacing="4" HBox.hgrow="ALWAYS">
+            <Label text="Brand" styleClass="field-label"/>
+            <TextField fx:id="brandField"/>
+        </VBox>
+    </HBox>
+
+    <Label text="SKU / Barcode" styleClass="field-label"/>
+    <HBox spacing="8">
+        <TextField fx:id="skuField" HBox.hgrow="ALWAYS"/>
+        <Button text="Generate" onAction="#onGenerateSku"/>
+    </HBox>
+
+    <HBox spacing="10">
+        <VBox spacing="4" HBox.hgrow="ALWAYS">
+            <Label text="Wholesale Price *" styleClass="field-label"/>
+            <TextField fx:id="wholesaleField"/>
+        </VBox>
+        <VBox spacing="4" HBox.hgrow="ALWAYS">
+            <Label text="Selling Price *" styleClass="field-label"/>
+            <TextField fx:id="sellingField"/>
+        </VBox>
+    </HBox>
+
+    <HBox spacing="10">
+        <VBox spacing="4" HBox.hgrow="ALWAYS">
+            <Label text="Total Quantity *" styleClass="field-label"/>
+            <TextField fx:id="totalQtyField"/>
+        </VBox>
+        <VBox spacing="4" HBox.hgrow="ALWAYS">
+            <Label text="Min Stock Level" styleClass="field-label"/>
+            <TextField fx:id="minStockField"/>
+        </VBox>
+    </HBox>
+
+    <Label text="Supplier" styleClass="field-label"/>
+    <ComboBox fx:id="supplierCombo" maxWidth="Infinity" editable="false"/>
+
+    <Label text="Description" styleClass="field-label"/>
+    <TextArea fx:id="descriptionField" prefRowCount="3" wrapText="true"/>
+
+    <Label text="Product Image (optional)" styleClass="field-label"/>
+    <HBox spacing="12" alignment="CENTER_LEFT">
+        <ImageView fx:id="imagePreview" fitWidth="64" fitHeight="64" preserveRatio="true"/>
+        <VBox spacing="6">
+            <HBox spacing="8">
+                <Button text="Choose Image…" onAction="#onChooseImage"/>
+                <Button text="Remove" onAction="#onRemoveImage"/>
+            </HBox>
+            <Label fx:id="imagePathLabel" styleClass="muted-text" text="No image selected — this field is optional"/>
+        </VBox>
+    </HBox>
+
+    <Label fx:id="profitPreviewLabel" styleClass="muted-text"/>
+    <Label fx:id="errorLabel" styleClass="error-text" wrapText="true"/>
+
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="Cancel" onAction="#onCancel"/>
+        <Button text="Save Product" styleClass="primary-button" onAction="#onSave"/>
+    </HBox>
+</VBox>

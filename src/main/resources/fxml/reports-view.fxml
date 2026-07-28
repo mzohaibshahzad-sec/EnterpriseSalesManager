@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.ledger.salesmanager.controller.ReportsViewController" spacing="16">
+    <padding><Insets top="22" bottom="22" left="26" right="26"/></padding>
+
+    <Label text="Reports" styleClass="page-title"/>
+    <Label text="Export product and sales reports for any date range." styleClass="muted-text"/>
+
+    <HBox spacing="12" alignment="CENTER_LEFT">
+        <Label text="From:" styleClass="field-label"/>
+        <DatePicker fx:id="fromDatePicker"/>
+        <Label text="To:" styleClass="field-label"/>
+        <DatePicker fx:id="toDatePicker"/>
+    </HBox>
+
+    <HBox spacing="16">
+        <VBox styleClass="card-pane" spacing="10" HBox.hgrow="ALWAYS">
+            <padding><Insets top="18" bottom="18" left="18" right="18"/></padding>
+            <Label text="Product / Inventory Report" styleClass="section-title"/>
+            <Label text="Full catalog with stock levels and profit margins." styleClass="muted-text" wrapText="true"/>
+            <HBox spacing="8">
+                <Button text="Export CSV" onAction="#onExportProductsCsv"/>
+                <Button text="Export Excel" onAction="#onExportProductsExcel"/>
+                <Button text="Export PDF" onAction="#onExportProductsPdf"/>
+            </HBox>
+        </VBox>
+
+        <VBox styleClass="card-pane" spacing="10" HBox.hgrow="ALWAYS">
+            <padding><Insets top="18" bottom="18" left="18" right="18"/></padding>
+            <Label text="Sales / Profit Report" styleClass="section-title"/>
+            <Label text="All sales within the selected date range." styleClass="muted-text" wrapText="true"/>
+            <HBox spacing="8">
+                <Button text="Export CSV" onAction="#onExportSalesCsv"/>
+                <Button text="Export Excel" onAction="#onExportSalesExcel"/>
+                <Button text="Export PDF" onAction="#onExportSalesPdf"/>
+            </HBox>
+        </VBox>
+    </HBox>
+
+    <Separator/>
+
+    <VBox styleClass="card-pane" spacing="10">
+        <padding><Insets top="18" bottom="18" left="18" right="18"/></padding>
+        <Label text="Database Backup &amp; Restore" styleClass="section-title"/>
+        <Label text="Requires mysqldump / mysql client tools installed and on PATH." styleClass="muted-text" wrapText="true"/>
+        <HBox spacing="8">
+            <Button text="Backup Now" onAction="#onBackup"/>
+            <Button text="Restore from File…" styleClass="danger-button" onAction="#onRestore"/>
+        </HBox>
+        <Label fx:id="backupStatusLabel" styleClass="muted-text"/>
+    </VBox>
+</VBox>

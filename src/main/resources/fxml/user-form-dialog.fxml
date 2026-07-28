@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.ledger.salesmanager.controller.UserFormController"
+      spacing="10" prefWidth="380" styleClass="root-pane">
+    <padding><Insets top="20" bottom="20" left="24" right="24"/></padding>
+
+    <Label text="Add Team Member" styleClass="section-title"/>
+
+    <Label text="Full Name *" styleClass="field-label"/>
+    <TextField fx:id="nameField"/>
+
+    <Label text="Username *" styleClass="field-label"/>
+    <TextField fx:id="usernameField"/>
+
+    <Label text="Gmail Address *" styleClass="field-label"/>
+    <TextField fx:id="gmailField"/>
+
+    <Label text="Phone Number" styleClass="field-label"/>
+    <TextField fx:id="phoneField"/>
+
+    <Label text="Password *" styleClass="field-label"/>
+    <PasswordField fx:id="passwordField"/>
+
+    <Label text="Role *" styleClass="field-label"/>
+    <ComboBox fx:id="roleCombo" maxWidth="Infinity"/>
+
+    <Label fx:id="errorLabel" styleClass="error-text" wrapText="true"/>
+
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="Cancel" onAction="#onCancel"/>
+        <Button text="Add User" styleClass="primary-button" onAction="#onSave"/>
+    </HBox>
+</VBox>

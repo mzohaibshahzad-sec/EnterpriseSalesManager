@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.ledger.salesmanager.controller.ViewerDashboardController"
+            styleClass="root-pane">
+    <top>
+        <VBox styleClass="viewer-topbar">
+            <padding><Insets top="16" bottom="16" left="28" right="28"/></padding>
+            <HBox alignment="CENTER_LEFT" spacing="14">
+                <ImageView fx:id="storeLogoView" fitHeight="42" fitWidth="42" preserveRatio="true"/>
+                <VBox>
+                    <Label fx:id="storeNameLabel" styleClass="title-text" text="Store"/>
+                    <Label text="Product Catalog" styleClass="muted-text"/>
+                </VBox>
+                <Pane HBox.hgrow="ALWAYS"/>
+                <TextField fx:id="searchField" promptText="Search products…" prefWidth="240"/>
+                <Button text="Salesperson Login" onAction="#onSalespersonLogin"/>
+                <Button text="Admin Login" styleClass="primary-button" onAction="#onAdminLogin"/>
+            </HBox>
+        </VBox>
+    </top>
+
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="transparent-scroll">
+            <FlowPane fx:id="productGrid" hgap="16" vgap="16">
+                <padding><Insets top="20" bottom="30" left="28" right="28"/></padding>
+            </FlowPane>
+        </ScrollPane>
+    </center>
+</BorderPane>

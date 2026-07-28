@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.ledger.salesmanager.controller.SettingsViewController"
+            fitToWidth="true" styleClass="transparent-scroll">
+    <VBox spacing="18">
+        <padding><Insets top="22" bottom="30" left="26" right="26"/></padding>
+
+        <Label text="Settings" styleClass="page-title"/>
+        <Label text="Store branding, database, email and appearance." styleClass="muted-text"/>
+
+        <VBox styleClass="card-pane" spacing="10">
+            <padding><Insets top="18" bottom="18" left="18" right="18"/></padding>
+            <Label text="Store Information" styleClass="section-title"/>
+            <Label text="Store Name" styleClass="field-label"/>
+            <TextField fx:id="storeNameField"/>
+            <Label text="Store Address" styleClass="field-label"/>
+            <TextField fx:id="storeAddressField"/>
+            <Label text="Store Contact Number" styleClass="field-label"/>
+            <TextField fx:id="storeContactField"/>
+            <Label text="Store Email" styleClass="field-label"/>
+            <TextField fx:id="storeEmailField"/>
+            <Button text="Save Store Info" onAction="#onSaveStoreInfo"/>
+        </VBox>
+
+        <VBox styleClass="card-pane" spacing="10">
+            <padding><Insets top="18" bottom="18" left="18" right="18"/></padding>
+            <Label text="Gmail SMTP (Owner 2FA)" styleClass="section-title"/>
+            <Label text="Use a Gmail App Password, not your regular password." styleClass="muted-text" wrapText="true"/>
+            <TextField fx:id="smtpUsernameField" promptText="your.email@gmail.com"/>
+            <PasswordField fx:id="smtpPasswordField" promptText="Gmail App Password"/>
+            <Button text="Save Email Settings" onAction="#onSaveSmtp"/>
+        </VBox>
+
+        <VBox styleClass="card-pane" spacing="10">
+            <padding><Insets top="18" bottom="18" left="18" right="18"/></padding>
+            <Label text="Appearance" styleClass="section-title"/>
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="Theme:" styleClass="field-label"/>
+                <ToggleButton fx:id="darkModeToggle" text="Dark Mode" onAction="#onToggleTheme"/>
+            </HBox>
+        </VBox>
+
+        <Label fx:id="statusLabel" styleClass="success-text"/>
+    </VBox>
+</ScrollPane>

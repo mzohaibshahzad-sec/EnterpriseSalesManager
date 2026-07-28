@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.ledger.salesmanager.controller.ProfileViewController" spacing="16">
+    <padding><Insets top="22" bottom="22" left="26" right="26"/></padding>
+
+    <Label text="Profile" styleClass="page-title"/>
+    <Label text="Manage your account details." styleClass="muted-text"/>
+
+    <HBox spacing="20">
+        <VBox styleClass="card-pane" prefWidth="260" spacing="8" alignment="CENTER">
+            <padding><Insets top="24" bottom="24" left="16" right="16"/></padding>
+            <Label fx:id="initialsLabel" styleClass="avatar-circle"/>
+            <Label fx:id="nameLabel" styleClass="section-title"/>
+            <Label fx:id="usernameLabel" styleClass="muted-text"/>
+            <Label fx:id="roleLabel" styleClass="field-label"/>
+            <Label fx:id="lastLoginLabel" styleClass="muted-text"/>
+        </VBox>
+
+        <VBox styleClass="card-pane" HBox.hgrow="ALWAYS" spacing="10">
+            <padding><Insets top="20" bottom="20" left="20" right="20"/></padding>
+            <Label text="Account Settings" styleClass="section-title"/>
+
+            <Label text="Full Name" styleClass="field-label"/>
+            <TextField fx:id="nameField"/>
+
+            <Label text="Gmail Address" styleClass="field-label"/>
+            <TextField fx:id="gmailField"/>
+
+            <Label text="Phone Number" styleClass="field-label"/>
+            <TextField fx:id="phoneField"/>
+
+            <HBox spacing="10">
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label text="New Password (optional)" styleClass="field-label"/>
+                    <PasswordField fx:id="newPasswordField"/>
+                </VBox>
+                <VBox spacing="4" HBox.hgrow="ALWAYS">
+                    <Label text="Confirm New Password" styleClass="field-label"/>
+                    <PasswordField fx:id="confirmPasswordField"/>
+                </VBox>
+            </HBox>
+
+            <Label fx:id="errorLabel" styleClass="error-text" wrapText="true"/>
+            <Label fx:id="successLabel" styleClass="success-text" wrapText="true"/>
+
+            <Button text="Save Changes" styleClass="primary-button" onAction="#onSave"/>
+        </VBox>
+    </HBox>
+</VBox>
